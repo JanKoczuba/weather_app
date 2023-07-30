@@ -10,7 +10,6 @@ const apiKeyName = 'apiKey';
 
 @module
 abstract class NetworkModule {
-  static const unitType = 'metric';
   @Named(baseUrlName)
   @LazySingleton()
   String provideBaseUrl() => 'https://api.openweathermap.org/data/2.5';
@@ -30,7 +29,7 @@ abstract class NetworkModule {
         baseUrl: baseUrl,
         queryParameters: {
           'appId': provideApiKey(),
-          'units': unitType,
+          'units': 'metric',
         },
       ),
     );
