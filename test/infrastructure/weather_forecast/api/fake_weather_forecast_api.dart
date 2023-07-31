@@ -1,4 +1,7 @@
+import 'package:dartz/dartz.dart';
 import 'package:intl/intl.dart';
+import 'package:weather_app/domain/weather_forecast/entity/weather.dart';
+import 'package:weather_app/domain/weather_forecast/entity/weather_forecast.dart';
 import 'package:weather_app/infrastructure/weather_forecast/api/weather_forecast_api.dart';
 import 'package:weather_app/infrastructure/weather_forecast/model/get_forecast_response.dart';
 import 'package:weather_app/infrastructure/weather_forecast/model/get_weather_response.dart';
@@ -12,6 +15,67 @@ class FakeWeatherForecastApi implements WeatherForecastApi {
       _date.add(
         Duration(days: index),
       ),
+    );
+  }
+
+  WeatherForecast getWeatherForecast() {
+    return WeatherForecast(
+      todayWeather: Weather(
+        temp: 11,
+        minTemp: 11,
+        maxTemp: 13,
+        description: 'overcast clouds',
+        icon: '04n',
+        city: some('Katowice'),
+        dayName: toDayName(0),
+      ),
+      forecast: [
+        Weather(
+          temp: 11,
+          minTemp: 10,
+          maxTemp: 11,
+          description: 'overcast clouds',
+          icon: '04n',
+          city: none(),
+          dayName: toDayName(0),
+        ),
+        Weather(
+          temp: 11,
+          minTemp: 10,
+          maxTemp: 11,
+          description: 'overcast clouds',
+          icon: '04n',
+          city: none(),
+          dayName: toDayName(1),
+        ),
+        Weather(
+          temp: 11,
+          minTemp: 10,
+          maxTemp: 11,
+          description: 'overcast clouds',
+          icon: '04n',
+          city: none(),
+          dayName: toDayName(2),
+        ),
+        Weather(
+          temp: 11,
+          minTemp: 10,
+          maxTemp: 11,
+          description: 'overcast clouds',
+          icon: '04n',
+          city: none(),
+          dayName: toDayName(3),
+        ),
+        Weather(
+          temp: 11,
+          minTemp: 10,
+          maxTemp: 11,
+          description: 'overcast clouds',
+          icon: '04n',
+          city: none(),
+          dayName: toDayName(4),
+        ),
+      ],
     );
   }
 
