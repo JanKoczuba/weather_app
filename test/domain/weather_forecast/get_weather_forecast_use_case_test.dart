@@ -1,12 +1,16 @@
 import 'package:dartz/dartz.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:mockito/annotations.dart';
 import 'package:mockito/mockito.dart';
 import 'package:weather_app/domain/core/failure.dart';
 import 'package:weather_app/domain/weather_forecast/entity/coordinates.dart';
 import 'package:weather_app/domain/weather_forecast/entity/weather_forecast.dart';
+import 'package:weather_app/domain/weather_forecast/repository/weather_forecast_repository.dart';
 import 'package:weather_app/domain/weather_forecast/use_case/get_weather_forecast_use_case.dart';
 
 import '../../infrastructure/weather_forecast/api/fake_weather_forecast_api.dart';
+
+@GenerateNiceMocks([MockSpec<WeatherForecastRepository>()])
 import 'get_weather_forecast_use_case_test.mocks.dart';
 
 void main() {
@@ -39,7 +43,8 @@ void main() {
       expect(
         result,
         Right<Failure, WeatherForecast>(
-            fakeWeatherForecastApi.getWeatherForecast()),
+          fakeWeatherForecastApi.getWeatherForecast(),
+        ),
       );
     });
     test('should return a failure', () async {
