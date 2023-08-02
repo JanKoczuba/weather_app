@@ -14,6 +14,8 @@ import '../api/fake_weather_forecast_api.dart';
 @GenerateNiceMocks([MockSpec<WeatherForecastApi>()])
 import 'api_weather_forecast_repository_test.mocks.dart';
 
+
+
 void main() {
   const coordinates = Coordinates(latitude: '40.7128', longitude: '-74.0060');
   late ApiWeatherForecastRepository apiWeatherForecastService;
