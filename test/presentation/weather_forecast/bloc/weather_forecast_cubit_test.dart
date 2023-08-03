@@ -2,6 +2,7 @@ import 'package:bloc_test/bloc_test.dart';
 import 'package:dartz/dartz.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
+import 'package:weather_app/domain/core/failure.dart';
 import 'package:weather_app/domain/geolocator/geolocation.dart';
 import 'package:weather_app/domain/weather_forecast/entity/coordinates.dart';
 import 'package:weather_app/domain/weather_forecast/entity/weather_forecast.dart';
@@ -18,8 +19,6 @@ class MockGeolocation extends Mock implements Geolocation {}
 void main() {
   const coordinates = Coordinates(latitude: '40.7128', longitude: '-74.0060');
   final tWeatherForecastState = WeatherForecastState.initial();
-  final tWeatherForecastStateWithCoordinates =
-      tWeatherForecastState.copyWith(coordinates: some(coordinates));
 
   late GetWeatherForecastUseCase mockGetWeatherForecastUseCase;
   late Geolocation mockGeolocation;
@@ -53,41 +52,51 @@ void main() {
           buildWeatherCubit().state,
           tWeatherForecastState,
         );
-        verify(
-          () => mockGeolocation.getCoordinates(),
-        ).called(1);
+        verifyNever(() => mockGeolocation.getCoordinates());
+        verifyNever(() => mockGetWeatherForecastUseCase.execute(coordinates));
       },
     );
+
     blocTest<WeatherForecastCubit, WeatherForecastState>(
-      'After some time initalized state should have coordinates',
-      setUp: initGeolocationRequest,
-      build: buildWeatherCubit,
-      expect: () =>
-          <WeatherForecastState>[tWeatherForecastStateWithCoordinates],
-      verify: (_) => verify(
-        () => mockGeolocation.getCoordinates(),
-      ).called(1),
-    );
-    blocTest<WeatherForecastCubit, WeatherForecastState>(
-      'Should return a valid state after calling getWeatherData()',
+      'Should emit a valid state after calling getWeatherData()',
       setUp: () {
         initGeolocationRequest();
-        when(
-          () => mockGetWeatherForecastUseCase.execute(coordinates),
-        ).thenAnswer(
-          (_) async => Right(fakeWeatherForecast),
-        );
+        when(() => mockGetWeatherForecastUseCase.execute(coordinates))
+            .thenAnswer((_) async => Right(fakeWeatherForecast));
       },
       build: buildWeatherCubit,
       act: (cubit) => cubit.getWeatherData(),
-      seed: () => tWeatherForecastStateWithCoordinates,
       expect: () => <WeatherForecastState>[
-        tWeatherForecastStateWithCoordinates.copyWith(
+        tWeatherForecastState.copyWith(
           isLoading: true,
         ),
-        tWeatherForecastStateWithCoordinates.copyWith(
+        tWeatherForecastState.copyWith(
           weatherForecast: some(fakeWeatherForecast),
           isLoading: false,
+        ),
+      ],
+      verify: (_) => [
+        verify(() => mockGeolocation.getCoordinates()).called(1),
+        verify(() => mockGetWeatherForecastUseCase.execute(coordinates))
+            .called(1),
+      ],
+    );
+    blocTest<WeatherForecastCubit, WeatherForecastState>(
+      'Should emit failure after calling getWeatherData()',
+      setUp: () {
+        initGeolocationRequest();
+        when(() => mockGetWeatherForecastUseCase.execute(coordinates))
+            .thenAnswer((_) async => const Left(Failure.badRequest()));
+      },
+      build: buildWeatherCubit,
+      act: (cubit) => cubit.getWeatherData(),
+      expect: () => <WeatherForecastState>[
+        tWeatherForecastState.copyWith(
+          isLoading: true,
+        ),
+        tWeatherForecastState.copyWith(
+          isLoading: false,
+          failure: some(const Failure.badRequest()),
         ),
       ],
       verify: (_) => verify(
