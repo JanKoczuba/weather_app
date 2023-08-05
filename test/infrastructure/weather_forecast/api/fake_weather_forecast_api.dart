@@ -18,6 +18,17 @@ class FakeWeatherForecastApi implements WeatherForecastApi {
     );
   }
 
+  DateTime _incrementDate(int index) => _date.add(
+        Duration(days: index),
+      );
+
+  String toFullDate(int index) {
+    final date = _incrementDate(index);
+    final monthName = DateFormat.MMMM().format(date);
+
+    return '${date.day} $monthName';
+  }
+
   WeatherForecast getWeatherForecast() {
     return WeatherForecast(
       todayWeather: Weather(
@@ -28,6 +39,7 @@ class FakeWeatherForecastApi implements WeatherForecastApi {
         icon: '04n',
         city: some('Katowice'),
         dayName: toDayName(0),
+        fullDate: toFullDate(0),
       ),
       forecast: [
         Weather(
@@ -38,6 +50,7 @@ class FakeWeatherForecastApi implements WeatherForecastApi {
           icon: '04n',
           city: none(),
           dayName: toDayName(0),
+          fullDate: toFullDate(0),
         ),
         Weather(
           temp: 11,
@@ -47,6 +60,7 @@ class FakeWeatherForecastApi implements WeatherForecastApi {
           icon: '04n',
           city: none(),
           dayName: toDayName(1),
+          fullDate: toFullDate(1),
         ),
         Weather(
           temp: 11,
@@ -56,6 +70,7 @@ class FakeWeatherForecastApi implements WeatherForecastApi {
           icon: '04n',
           city: none(),
           dayName: toDayName(2),
+          fullDate: toFullDate(2),
         ),
         Weather(
           temp: 11,
@@ -65,6 +80,7 @@ class FakeWeatherForecastApi implements WeatherForecastApi {
           icon: '04n',
           city: none(),
           dayName: toDayName(3),
+          fullDate: toFullDate(3),
         ),
         Weather(
           temp: 11,
@@ -74,6 +90,7 @@ class FakeWeatherForecastApi implements WeatherForecastApi {
           icon: '04n',
           city: none(),
           dayName: toDayName(4),
+          fullDate: toFullDate(4),
         ),
       ],
     );

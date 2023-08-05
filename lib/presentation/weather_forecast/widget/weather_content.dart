@@ -6,11 +6,8 @@ import 'package:weather_app/presentation/weather_forecast/bloc/weather_forecast_
 
 class WeatherContent extends StatelessWidget {
   const WeatherContent({
-    required this.date,
     super.key,
   });
-
-  final DateTime date;
 
   @override
   Widget build(BuildContext context) {
@@ -41,10 +38,14 @@ class WeatherContent extends StatelessWidget {
                                 key: const Key('tempDescription'),
                                 '${weatherForecast.todayWeather.description}',
                               ),
+                              Text(
+                                key: const Key('tempDate'),
+                                '${weatherForecast.todayWeather.fullDate}',
+                              ),
                             ],
                           ),
                           RichText(
-                            key: const Key('tadaysTemperatures'),
+                            key: const Key('todaysTemperatures'),
                             text: TextSpan(
                               children: [
                                 TextSpan(
@@ -68,7 +69,6 @@ class WeatherContent extends StatelessWidget {
                   ),
                 ),
                 Expanded(
-                  flex: 2,
                   child: ListView.builder(
                     shrinkWrap: true,
                     scrollDirection: Axis.horizontal,
@@ -77,15 +77,14 @@ class WeatherContent extends StatelessWidget {
                       final forecast = weatherForecast.forecast[index];
                       return Card(
                         child: Padding(
-                          padding: const EdgeInsets.all(20.0),
+                          padding: const EdgeInsets.all(0.0),
                           child: Column(
                             children: [
                               Text(forecast.dayName),
+                              Text(forecast.fullDate),
                               Image.network(
                                 'https://openweathermap.org/img/wn/${forecast.icon}@2x.png',
                               ),
-                              Text(forecast.description),
-                              //  const Spacer(),
                               Text(
                                 '${forecast.maxTemp}\u2103',
                                 style: const TextStyle(

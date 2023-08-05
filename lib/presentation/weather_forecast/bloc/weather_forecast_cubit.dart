@@ -2,12 +2,11 @@ import 'package:bloc/bloc.dart';
 import 'package:dartz/dartz.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:injectable/injectable.dart';
+import 'package:weather_app/domain/core/failure.dart';
 import 'package:weather_app/domain/geolocator/geolocation.dart';
 import 'package:weather_app/domain/weather_forecast/entity/coordinates.dart';
 import 'package:weather_app/domain/weather_forecast/entity/weather_forecast.dart';
 import 'package:weather_app/domain/weather_forecast/use_case/get_weather_forecast_use_case.dart';
-
-import '../../../domain/core/failure.dart';
 
 part 'weather_forecast_cubit.freezed.dart';
 
@@ -17,14 +16,14 @@ part 'weather_forecast_state.dart';
 class WeatherForecastCubit extends Cubit<WeatherForecastState> {
   WeatherForecastCubit(
     this._getWeatherDataUseCase,
-    this.geolocation,
+    this._geolocation,
   ) : super(WeatherForecastState.initial());
 
   final GetWeatherForecastUseCase _getWeatherDataUseCase;
-  final Geolocation geolocation;
+  final Geolocation _geolocation;
 
   Future<Coordinates> _getCoordinates() async {
-    return geolocation.getCoordinates();
+    return _geolocation.getCoordinates();
   }
 
   Future<void> getWeatherData() async {
@@ -47,6 +46,7 @@ class WeatherForecastCubit extends Cubit<WeatherForecastState> {
         state.copyWith(
           weatherForecast: some(r),
           isLoading: false,
+          city: r.todayWeather.city.fold(() => null, (a) => a),
         ),
       ),
     );

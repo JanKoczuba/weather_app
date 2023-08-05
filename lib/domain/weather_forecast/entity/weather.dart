@@ -10,6 +10,7 @@ class Weather extends Equatable {
     required this.icon,
     required this.city,
     required this.dayName,
+    required this.fullDate,
   });
 
   final int temp;
@@ -19,6 +20,7 @@ class Weather extends Equatable {
   final String icon;
   final Option<String> city;
   final String dayName;
+  final String fullDate;
 
   @override
   List<Object?> get props => [

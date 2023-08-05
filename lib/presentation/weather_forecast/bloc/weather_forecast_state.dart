@@ -6,6 +6,7 @@ class WeatherForecastState with _$WeatherForecastState {
     required Option<WeatherForecast> weatherForecast,
     required Option<Failure> failure,
     required bool isLoading,
+    String? city,
   }) = _WeatherForecastState;
 
   factory WeatherForecastState.initial() => WeatherForecastState(

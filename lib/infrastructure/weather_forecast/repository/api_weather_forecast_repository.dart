@@ -22,11 +22,20 @@ class ApiWeatherForecastRepository extends BaseApiService
   final WeatherForecastApi _api;
   final DateTime _date;
 
-  String _toDayName(int index) => DateFormat('EEEE').format(
-        _date.add(
-          Duration(days: index),
-        ),
+  DateTime _incrementDate(int index) => _date.add(
+        Duration(days: index),
       );
+
+  String _toDayName(int index) => DateFormat('EEEE').format(
+        _incrementDate(index),
+      );
+
+  String _toFullDate(int index) {
+    final date = _incrementDate(index);
+    final monthName = DateFormat.MMMM().format(date);
+
+    return '${date.day} $monthName';
+  }
 
   Weather _toWeather(
     List<WeatherData> data,
@@ -42,6 +51,7 @@ class ApiWeatherForecastRepository extends BaseApiService
         icon: data.first.icon,
         city: city,
         dayName: _toDayName(index),
+        fullDate: _toFullDate(index),
       );
 
   @override

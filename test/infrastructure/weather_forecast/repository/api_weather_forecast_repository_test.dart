@@ -14,8 +14,6 @@ import '../api/fake_weather_forecast_api.dart';
 @GenerateNiceMocks([MockSpec<WeatherForecastApi>()])
 import 'api_weather_forecast_repository_test.mocks.dart';
 
-
-
 void main() {
   const coordinates = Coordinates(latitude: '40.7128', longitude: '-74.0060');
   late ApiWeatherForecastRepository apiWeatherForecastService;
@@ -76,6 +74,7 @@ void main() {
               icon: '04n',
               city: some('Katowice'),
               dayName: fakeWeatherForecastApi.toDayName(0),
+              fullDate: fakeWeatherForecastApi.toFullDate(0),
             ),
             forecast: [
               Weather(
@@ -86,6 +85,7 @@ void main() {
                 icon: '04n',
                 city: none(),
                 dayName: fakeWeatherForecastApi.toDayName(0),
+                fullDate: fakeWeatherForecastApi.toFullDate(0),
               ),
               Weather(
                 temp: 11,
@@ -95,6 +95,7 @@ void main() {
                 icon: '04n',
                 city: none(),
                 dayName: fakeWeatherForecastApi.toDayName(1),
+                fullDate: fakeWeatherForecastApi.toFullDate(1),
               ),
               Weather(
                 temp: 11,
@@ -104,6 +105,7 @@ void main() {
                 icon: '04n',
                 city: none(),
                 dayName: fakeWeatherForecastApi.toDayName(2),
+                fullDate: fakeWeatherForecastApi.toFullDate(2),
               ),
               Weather(
                 temp: 11,
@@ -113,6 +115,7 @@ void main() {
                 icon: '04n',
                 city: none(),
                 dayName: fakeWeatherForecastApi.toDayName(3),
+                fullDate: fakeWeatherForecastApi.toFullDate(3),
               ),
               Weather(
                 temp: 11,
@@ -122,6 +125,7 @@ void main() {
                 icon: '04n',
                 city: none(),
                 dayName: fakeWeatherForecastApi.toDayName(4),
+                fullDate: fakeWeatherForecastApi.toFullDate(4),
               ),
             ],
           ),

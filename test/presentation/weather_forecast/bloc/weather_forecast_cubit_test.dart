@@ -73,6 +73,10 @@ void main() {
         tWeatherForecastState.copyWith(
           weatherForecast: some(fakeWeatherForecast),
           isLoading: false,
+          city: fakeWeatherForecast.todayWeather.city.fold(
+            () => null,
+            (a) => a,
+          ),
         ),
       ],
       verify: (_) => [
