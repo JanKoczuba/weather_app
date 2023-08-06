@@ -1,3 +1,5 @@
+import 'dart:ui';
+
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -34,12 +36,32 @@ class _WeatherForecastPageState extends State<WeatherForecastPage> {
                 );
               });
             },
-            child: Scaffold(
-              appBar: AppBar(
-                title:
-                    Text(context.read<WeatherForecastCubit>().state.city ?? ''),
+            child: SafeArea(
+              child: Scaffold(
+                body: Stack(
+                  children: [
+                    BackdropFilter(
+                      filter: ImageFilter.blur(sigmaX: 100, sigmaY: 100),
+                      child: Container(
+                        decoration: const BoxDecoration(
+                          gradient: LinearGradient(
+                            colors: [
+                              AppColor.appBackgroundGradient4,
+                              AppColor.appBackgroundGradient1,
+                              AppColor.appBackgroundGradient2,
+                              AppColor.appBackgroundGradient3,
+                              AppColor.appBackgroundGradient4,
+                            ],
+                            begin: Alignment.bottomCenter,
+                            end: Alignment.topLeft,
+                          ),
+                        ),
+                      ),
+                    ),
+                    WeatherContent(),
+                  ],
+                ),
               ),
-              body: const WeatherContent(),
             ),
           );
         },
