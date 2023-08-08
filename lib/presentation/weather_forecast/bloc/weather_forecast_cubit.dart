@@ -35,20 +35,17 @@ class WeatherForecastCubit extends Cubit<WeatherForecastState> {
 
     final coordinates = await _getCoordinates();
     final result = await _getWeatherDataUseCase.execute(coordinates);
-    result.fold(
-      (l) => emit(
-        state.copyWith(
-          isLoading: false,
-          failure: some(l),
+
+    emit(state.copyWith(
+      failureOrWeatherForecast: some(result),
+      isLoading: false,
+      city: result.fold(
+        (failure) => null,
+        (weatherForecast) => weatherForecast.todayWeather.city.fold(
+          () => null,
+          (a) => a,
         ),
       ),
-      (r) => emit(
-        state.copyWith(
-          weatherForecast: some(r),
-          isLoading: false,
-          city: r.todayWeather.city.fold(() => null, (a) => a),
-        ),
-      ),
-    );
+    ));
   }
 }

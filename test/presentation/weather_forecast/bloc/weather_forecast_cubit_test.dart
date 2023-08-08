@@ -19,16 +19,18 @@ class MockGeolocation extends Mock implements Geolocation {}
 void main() {
   const coordinates = Coordinates(latitude: '40.7128', longitude: '-74.0060');
   final tWeatherForecastState = WeatherForecastState.initial();
-
   late GetWeatherForecastUseCase mockGetWeatherForecastUseCase;
   late Geolocation mockGeolocation;
   late WeatherForecast fakeWeatherForecast;
+  late WeatherForecast fakeWeatherForecastWithNoCity;
 
   setUp(() {
     final fakeWeatherForecastApi = FakeWeatherForecastApi();
     mockGetWeatherForecastUseCase = MockGetWeatherForecastUseCase();
     mockGeolocation = MockGeolocation();
     fakeWeatherForecast = fakeWeatherForecastApi.getWeatherForecast();
+    fakeWeatherForecastWithNoCity =
+        fakeWeatherForecastApi.getWeatherForecast(hasCity: false);
   });
 
   void initGeolocationRequest() {
@@ -71,11 +73,39 @@ void main() {
           isLoading: true,
         ),
         tWeatherForecastState.copyWith(
-          weatherForecast: some(fakeWeatherForecast),
+          failureOrWeatherForecast: some(right(fakeWeatherForecast)),
           isLoading: false,
           city: fakeWeatherForecast.todayWeather.city.fold(
             () => null,
             (a) => a,
+          ),
+        ),
+      ],
+      verify: (_) => [
+        verify(() => mockGeolocation.getCoordinates()).called(1),
+        verify(() => mockGetWeatherForecastUseCase.execute(coordinates))
+            .called(1),
+      ],
+    );
+    blocTest<WeatherForecastCubit, WeatherForecastState>(
+      'Should emit a valid state with no city after calling getWeatherData()',
+      setUp: () {
+        initGeolocationRequest();
+        when(() => mockGetWeatherForecastUseCase.execute(coordinates))
+            .thenAnswer((_) async => Right(fakeWeatherForecastWithNoCity));
+      },
+      build: buildWeatherCubit,
+      act: (cubit) => cubit.getWeatherData(),
+      expect: () => <WeatherForecastState>[
+        tWeatherForecastState.copyWith(
+          isLoading: true,
+        ),
+        tWeatherForecastState.copyWith(
+          failureOrWeatherForecast: some(right(fakeWeatherForecastWithNoCity)),
+          isLoading: false,
+          city: fakeWeatherForecastWithNoCity.todayWeather.city.fold(
+                () => null,
+                (a) => a,
           ),
         ),
       ],
@@ -100,7 +130,11 @@ void main() {
         ),
         tWeatherForecastState.copyWith(
           isLoading: false,
-          failure: some(const Failure.badRequest()),
+          failureOrWeatherForecast: some(left(const Failure.badRequest())),
+          city: fakeWeatherForecastWithNoCity.todayWeather.city.fold(
+            () => null,
+            (a) => a,
+          ),
         ),
       ],
       verify: (_) => verify(

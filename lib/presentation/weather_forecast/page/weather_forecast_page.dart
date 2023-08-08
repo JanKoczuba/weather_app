@@ -21,50 +21,32 @@ class _WeatherForecastPageState extends State<WeatherForecastPage> {
   Widget build(BuildContext context) {
     return BlocProvider(
       create: (context) => getIt<WeatherForecastCubit>()..getWeatherData(),
-      child: Builder(
-        builder: (context) {
-          return BlocListener<WeatherForecastCubit, WeatherForecastState>(
-            listenWhen: (previous, current) =>
-                previous.failure != current.failure,
-            listener: (context, state) {
-              state.failure.forEach((failure) async {
-                ScaffoldMessenger.of(context).showSnackBar(
-                  SnackBar(
-                    backgroundColor: AppColor.error,
-                    content: Text(failure.toString()),
-                  ),
-                );
-              });
-            },
-            child: SafeArea(
-              child: Scaffold(
-                body: Stack(
-                  children: [
-                    BackdropFilter(
-                      filter: ImageFilter.blur(sigmaX: 100, sigmaY: 100),
-                      child: Container(
-                        decoration: const BoxDecoration(
-                          gradient: LinearGradient(
-                            colors: [
-                              AppColor.appBackgroundGradient4,
-                              AppColor.appBackgroundGradient1,
-                              AppColor.appBackgroundGradient2,
-                              AppColor.appBackgroundGradient3,
-                              AppColor.appBackgroundGradient4,
-                            ],
-                            begin: Alignment.bottomCenter,
-                            end: Alignment.topLeft,
-                          ),
-                        ),
-                      ),
+      child: SafeArea(
+        child: Scaffold(
+          body: Stack(
+            children: [
+              BackdropFilter(
+                filter: ImageFilter.blur(sigmaX: 100, sigmaY: 100),
+                child: Container(
+                  decoration: const BoxDecoration(
+                    gradient: LinearGradient(
+                      colors: [
+                        AppColor.appBackgroundGradient4,
+                        AppColor.appBackgroundGradient1,
+                        AppColor.appBackgroundGradient2,
+                        AppColor.appBackgroundGradient3,
+                        AppColor.appBackgroundGradient4,
+                      ],
+                      begin: Alignment.bottomCenter,
+                      end: Alignment.topLeft,
                     ),
-                    WeatherContent(),
-                  ],
+                  ),
                 ),
               ),
-            ),
-          );
-        },
+              const WeatherContent(),
+            ],
+          ),
+        ),
       ),
     );
   }

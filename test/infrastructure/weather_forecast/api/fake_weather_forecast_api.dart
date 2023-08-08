@@ -29,7 +29,7 @@ class FakeWeatherForecastApi implements WeatherForecastApi {
     return '${date.day} $monthName';
   }
 
-  WeatherForecast getWeatherForecast() {
+  WeatherForecast getWeatherForecast({bool hasCity = true}) {
     return WeatherForecast(
       todayWeather: Weather(
         temp: 11,
@@ -37,7 +37,7 @@ class FakeWeatherForecastApi implements WeatherForecastApi {
         maxTemp: 13,
         description: 'overcast clouds',
         icon: '04n',
-        city: some('Katowice'),
+        city: hasCity ? some('Katowice') : none(),
         dayName: toDayName(0),
         fullDate: toFullDate(0),
       ),

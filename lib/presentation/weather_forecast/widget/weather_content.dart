@@ -18,35 +18,38 @@ class WeatherContent extends StatelessWidget {
       builder: (context, state) {
         return ProcessingContainer(
           isProcessing: state.isLoading,
-          child: state.weatherForecast.fold(
-            Container.new,
-            (weatherForecast) {
-              return Column(
-                mainAxisSize: MainAxisSize.min,
-                mainAxisAlignment: MainAxisAlignment.spaceAround,
-                children: [
-                  MainWeatherCard(
-                    todayWeather: weatherForecast.todayWeather,
-                    cityName: state.city,
-                  ),
-                  Expanded(
-                    flex: 2,
-                    child: ListView.builder(
-                      shrinkWrap: true,
-                      scrollDirection: Axis.horizontal,
-                      itemCount: weatherForecast.forecast.length,
-                      itemBuilder: (context, index) {
-                        final forecast = weatherForecast.forecast[index];
-                        return WeatherForecastCard(
-                          forecast: forecast,
-                        );
-                      },
+          child: state.failureOrWeatherForecast.fold(
+            () => SizedBox(),
+            (failureOrWeatherForecast) => failureOrWeatherForecast.fold(
+              (l) => SizedBox(),
+              (weatherForecast) {
+                return Column(
+                  mainAxisSize: MainAxisSize.min,
+                  mainAxisAlignment: MainAxisAlignment.spaceAround,
+                  children: [
+                    MainWeatherCard(
+                      todayWeather: weatherForecast.todayWeather,
+                      cityName: state.city,
                     ),
-                  ),
-                  const Spacer(),
-                ],
-              );
-            },
+                    Expanded(
+                      flex: 2,
+                      child: ListView.builder(
+                        shrinkWrap: true,
+                        scrollDirection: Axis.horizontal,
+                        itemCount: weatherForecast.forecast.length,
+                        itemBuilder: (context, index) {
+                          final forecast = weatherForecast.forecast[index];
+                          return WeatherForecastCard(
+                            forecast: forecast,
+                          );
+                        },
+                      ),
+                    ),
+                    const Spacer(),
+                  ],
+                );
+              },
+            ),
           ),
         );
       },
